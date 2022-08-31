@@ -63,6 +63,15 @@ class Database:
         sql = "INSERT INTO main_user (name, username, id) VALUES($1, $2, $3) returning *"
         return await self.execute(sql, full_name, username, telegram_id, fetchrow=True)
 
+    async def get_all_course(self):
+        sql = 'SELECT * FROM main_poll_type'
+        return await self.execute(sql, fetch=True)
+
+    async def get_course(self, **kwargs):
+        sql = "SELECT * FROM main_poll_type WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetch=True)
+
     async def select_all_users(self):
         sql = "SELECT * FROM main_user"
         return await self.execute(sql, fetch=True)
@@ -70,9 +79,11 @@ class Database:
     async def select_all_group(self):
         sql = "SELECT * FROM main_group"
         return await self.execute(sql, fetch=True)
-    async def all_tops(self):
-        sql = 'SELECT * FROM main_poll_class'
-        return await self.execute(sql, fetch=True)
+
+    async def all_tops(self, **kwargs):
+        sql = 'SELECT * FROM main_poll_class WHERE '
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetch=True)
 
     async def all_quest(self, **kwargs):
         sql = "SELECT * FROM main_poll WHERE "
